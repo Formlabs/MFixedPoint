@@ -317,15 +317,15 @@ namespace mn {
                 return rawVal_ == r.rawVal_;
             }
 
-            bool operator != (const FpF &r) {
+            bool operator != (const FpF &r) const {
                 return !(*this == r);
             }
 
-            bool operator < (const FpF &r) {
+            bool operator < (const FpF &r) const {
                 return rawVal_ < r.rawVal_;
             }
 
-            bool operator > (const FpF &r) {
+            bool operator > (const FpF &r) const {
                 return rawVal_ > r.rawVal_;
             }
 
