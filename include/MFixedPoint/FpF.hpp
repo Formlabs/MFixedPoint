@@ -604,19 +604,19 @@ double Fix32ToDouble(int32_t f)
     } // namespace MFixedPoint
 } //namespace mn
 
-inline ::mn::MFixedPoint::FpF32<16> operator "" __fp32(unsigned long long int l) noexcept {
+inline ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(unsigned long long int l) noexcept {
     return ::mn::MFixedPoint::FpF32<16>((int32_t)l);
 }
 
-inline ::mn::MFixedPoint::FpF32<16> operator "" __fp32(long double l) noexcept {
+inline ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(long double l) noexcept {
     return ::mn::MFixedPoint::FpF32<16>((double)l);
 }
 
-inline ::mn::MFixedPoint::FpF16<8> operator "" __fp16(unsigned long long int l) noexcept {
+inline ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(unsigned long long int l) noexcept {
     return ::mn::MFixedPoint::FpF16<8>((int32_t)l);
 }
 
-inline ::mn::MFixedPoint::FpF16<8> operator "" __fp16(long double l) noexcept {
+inline ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(long double l) noexcept {
     return ::mn::MFixedPoint::FpF16<8>((double)l);
 }
 
