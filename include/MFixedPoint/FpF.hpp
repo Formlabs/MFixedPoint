@@ -189,7 +189,7 @@ namespace mn {
             //================================== CONSTRUCTORS/DESTRUCTORS ===================================//
             //===============================================================================================//
 
-            FpF() = default;
+            constexpr FpF() = default;
 
             ~FpF() = default;
 
@@ -198,25 +198,25 @@ namespace mn {
             //===============================================================================================//
 
             /// \brief		Get the raw value (memory representation) of this fixed-point number,
-            BaseType GetRawVal() const {
+            constexpr BaseType GetRawVal() const {
                 return rawVal_;
             }
 
-            FpF(int8_t i) :
+            constexpr FpF(int8_t i) :
                     rawVal_((int32_t) i << numFracBits) {}
 
-            FpF(int16_t i) :
+            constexpr FpF(int16_t i) :
                     rawVal_((int32_t) i << numFracBits) {}
 
-            FpF(int32_t i) :
+            constexpr FpF(int32_t i) :
                     rawVal_(i << numFracBits) {}
 
             /// \brief		Constructor that accepts a float.
-            FpF(float f) :
+            constexpr FpF(float f) :
                     rawVal_((BaseType) (f * (float) ((BaseType) 1 << numFracBits))) {}
 
             /// \brief		Create a fixed-point number from a double.
-            FpF(double f) :
+            constexpr FpF(double f) :
                     rawVal_((BaseType) (f * (double) ((BaseType) 1 << numFracBits))) {}
 
             //===============================================================================================//
@@ -261,7 +261,7 @@ namespace mn {
             // Simple Arithmetic Overloads
 
             /// \brief		Overload for '-itself' operator.
-            FpF operator - () const {
+            constexpr FpF operator - () {
                 FpF x;
                 x.rawVal_ = -rawVal_;
                 return x;
@@ -269,7 +269,7 @@ namespace mn {
 
             /// \brief		Overload for '+' operator.
             /// \details	Uses '+=' operator.
-            FpF operator + (const FpF& r) const {
+            constexpr FpF operator + (const FpF& r) {
                 FpF x = *this;
                 x += r;
                 return x;
@@ -277,7 +277,7 @@ namespace mn {
 
             /// \brief		Overload for '-' operator.
             /// \details	Uses '-=' operator.
-            FpF operator - (const FpF& r) const {
+            constexpr FpF operator - (const FpF& r) {
                 FpF x = *this;
                 x -= r;
                 return x;
@@ -286,7 +286,7 @@ namespace mn {
             /// \brief		Overload for '*' operator.
             /// \details	Uses '*=' operator.
             template<class BaseTypeR, class OverflowTypeR, uint8_t numFracBitsR>
-            FpF<BaseType, OverflowType, numFracBits> operator*(FpF<BaseTypeR, OverflowTypeR, numFracBitsR> r) const {
+            constexpr FpF<BaseType, OverflowType, numFracBits> operator*(FpF<BaseTypeR, OverflowTypeR, numFracBitsR> r) {
                 SAME_TEMPLATE_PARAM_CHECK();
                 FpF<BaseType, OverflowType, numFracBits> x = *this;
                 x *= r;
@@ -296,7 +296,7 @@ namespace mn {
             /// \brief		Overload for '/' operator.
             /// \details	Uses '/=' operator.
             template<class BaseTypeR, class OverflowTypeR, uint8_t numFracBitsR>
-            FpF operator/(FpF<BaseTypeR, OverflowTypeR, numFracBitsR> r) const {
+            constexpr FpF operator/(FpF<BaseTypeR, OverflowTypeR, numFracBitsR> r) {
                 SAME_TEMPLATE_PARAM_CHECK();
                 FpF x = *this;
                 x /= r;
@@ -305,7 +305,7 @@ namespace mn {
 
             /// \brief		Overload for '%' operator.
             /// \details	Uses '%=' operator.
-            FpF operator % (const FpF& r) const {
+            constexpr FpF operator % (const FpF& r) {
                 FpF x = *this;
                 x %= r;
                 return x;
@@ -313,27 +313,27 @@ namespace mn {
 
             // FpF-FpF Binary Operator Overloads
 
-            bool operator == (const FpF& r) const {
+            constexpr bool operator == (const FpF& r) {
                 return rawVal_ == r.rawVal_;
             }
 
-            bool operator != (const FpF &r) const {
+            constexpr bool operator != (const FpF &r) {
                 return !(*this == r);
             }
 
-            bool operator < (const FpF &r) const {
+            constexpr bool operator < (const FpF &r) {
                 return rawVal_ < r.rawVal_;
             }
 
-            bool operator > (const FpF &r) const {
+            constexpr bool operator > (const FpF &r) {
                 return rawVal_ > r.rawVal_;
             }
 
-            bool operator <= (const FpF& r) const {
+            constexpr bool operator <= (const FpF& r) {
                 return rawVal_ <= r.rawVal_;
             }
 
-            bool operator >= (const FpF& r) const {
+            constexpr bool operator >= (const FpF& r) {
                 return rawVal_ >= r.rawVal_;
             }
 
@@ -345,51 +345,51 @@ namespace mn {
             /// \details	Always rounds to negative infinity (66.3 becomes 66, -66.3 becomes -67).
             /// \tparam		IntType		The return integer type.
             template<class IntType>
-            IntType ToInt() const {
+            constexpr IntType ToInt() {
                 // Right-shift to get rid of all the decimal bits
                 // This rounds towards negative infinity
                 return (IntType) (rawVal_ >> numFracBits);
             }
 
             /// \brief		Converts the fixed-point number to a float.
-            float ToFloat() const {
+            constexpr float ToFloat() noexcept {
                 return (float) rawVal_ / (float) ((BaseType) 1 << numFracBits);
             }
 
             /// \brief		Converts the fixed-point number to a double.
-            double ToDouble() const {
+            constexpr double ToDouble() noexcept {
                 return (double) rawVal_ / (double) ((BaseType) 1 << numFracBits);
             }
 
             /// \brief		Conversion operator from fixed-point to int16_t.
             /// \details    Truncates answer.
-            explicit operator int16_t() {
+            explicit constexpr operator int16_t() noexcept {
                 // Right-shift to get rid of all the decimal bits (truncate)
                 return (int16_t) (rawVal_ >> numFracBits);
             }
 
             /// \brief		Conversion operator from fixed-point to int32_t.
             /// \details    Truncates answer.
-            explicit operator int32_t() {
+            explicit constexpr operator int32_t() noexcept {
                 // Right-shift to get rid of all the decimal bits (truncate)
                 return (int32_t)(rawVal_ >> numFracBits);
             }
 
             /// \brief		Conversion operator from fixed-point to int64_t.
             /// \details    Truncates answer.
-            explicit operator int64_t() {
+            explicit constexpr operator int64_t() noexcept {
                 // Right-shift to get rid of all the decimal bits (truncate)
                 return (int64_t) (rawVal_ >> numFracBits);
             }
 
             /// \brief		Conversion operator from fixed-point to float.
-            explicit operator float() {
+            explicit constexpr operator float() noexcept {
                 return (float) rawVal_ / (float) (1 << numFracBits);
             }
 
             /// \brief		Conversion operator from fixed-point to double.
             /// \note		Similar to float conversion.
-            explicit operator double() {
+            explicit constexpr operator double() noexcept {
                 return (double) rawVal_ / (double) (1 << numFracBits);
             }
 
@@ -409,51 +409,51 @@ namespace mn {
                 return *this;
             }
 
-            FpF operator + (int r) const {
+            constexpr FpF operator + (int r) const {
                 FpF x = *this;
                 x += FpF(r);
                 return x;
             }
 
-            FpF operator - (int r) const {
+            constexpr FpF operator - (int r) const {
                 FpF x = *this;
                 x -= r;
                 return x;
             }
 
-            FpF operator * (int r) const {
+            constexpr FpF operator * (int r) const {
                 FpF x = *this;
                 x *= r;
                 return x;
             }
 
-            FpF operator / (int r) const {
+            constexpr FpF operator / (int r) const {
                 FpF x = *this;
                 x /= r;
                 return x;
             }
 
-            bool operator >(int r) const {
+            constexpr bool operator >(int r) const {
                 return rawVal_ > ((BaseType)r << numFracBits);
             }
 
-            bool operator >=(int r) const {
+            constexpr bool operator >=(int r) const {
                 return rawVal_ >= ((BaseType)r << numFracBits);
             }
 
-            bool operator < (int r) const {
+            constexpr bool operator < (int r) const {
                 return rawVal_ < ((BaseType)r << numFracBits);
             }
 
-            bool operator <= (int r) const {
+            constexpr bool operator <= (int r) const {
                 return rawVal_ <= ((BaseType)r << numFracBits);
             }
 
-            bool operator ==(int r) const {
+            constexpr bool operator ==(int r) const {
                 return rawVal_ == ((BaseType)r << numFracBits);
             }
 
-            bool operator !=(int r) const {
+            constexpr bool operator !=(int r) const {
                 return rawVal_ != ((BaseType)r << numFracBits);
             }
 
@@ -604,19 +604,19 @@ double Fix32ToDouble(int32_t f)
     } // namespace MFixedPoint
 } //namespace mn
 
-inline ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(unsigned long long int l) noexcept {
+inline constexpr ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(unsigned long long int l) noexcept {
     return ::mn::MFixedPoint::FpF32<16>((int32_t)l);
 }
 
-inline ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(long double l) noexcept {
+inline constexpr ::mn::MFixedPoint::FpF32<16> operator "" __FpF32(long double l) noexcept {
     return ::mn::MFixedPoint::FpF32<16>((double)l);
 }
 
-inline ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(unsigned long long int l) noexcept {
+inline constexpr ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(unsigned long long int l) noexcept {
     return ::mn::MFixedPoint::FpF16<8>((int32_t)l);
 }
 
-inline ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(long double l) noexcept {
+inline constexpr ::mn::MFixedPoint::FpF16<8> operator "" __FpF16(long double l) noexcept {
     return ::mn::MFixedPoint::FpF16<8>((double)l);
 }
 
