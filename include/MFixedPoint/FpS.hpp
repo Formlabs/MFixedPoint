@@ -44,14 +44,14 @@ class FpS {
 	//===============================================================================================//
 	
 	/// \brief		Create a fixed-point value from a integer and a num. of fractional bits.
-	FpS(int32_t integer, uint8_t numFracBits)	{
+	constexpr FpS(int32_t integer, uint8_t numFracBits)	{
 		static_assert(std::is_integral<BaseType>::value, "Integral BaseType required for FpS class.");
 		rawVal_ = integer << numFracBits;
 		numFracBits_ = numFracBits;
 	}
 	
 	/// \brief		Create a fixed-point value from a double and a num. of fractional bits.
-	FpS(double dbl, uint8_t numFracBits) {
+	constexpr FpS(double dbl, uint8_t numFracBits) {
 		static_assert(std::is_integral<BaseType>::value, "Integral BaseType required for FpS class.");
 		rawVal_ = (BaseType)(dbl * ((BaseType)1 << numFracBits));
 		numFracBits_ = numFracBits;
@@ -62,12 +62,12 @@ class FpS {
 	//===============================================================================================//
 	
 	/// \brief		Get the raw value (memory representation) of this fixed-point number,
-	BaseType GetRawVal() const {
+	constexpr BaseType GetRawVal() const {
 		return rawVal_;
 	}
 
 	/// \brief		Returns the number of fractional bits used in this fixed-point number.
-	uint8_t GetNumFracBits() const {
+	constexpr uint8_t GetNumFracBits() const {
 		return numFracBits_;
 	}
 
@@ -201,7 +201,7 @@ class FpS {
 	
 	/// \brief		Overload for '+' operator.
 	/// \details	Uses '+=' operator.
-	FpS operator + (FpS r) const {
+	constexpr FpS operator + (FpS r) const {
 		FpS x = *this;
 		x += r;
 		return x;
@@ -209,7 +209,7 @@ class FpS {
 	
 	/// \brief		Overload for '-' operator.
 	/// \details	Uses '-=' operator.
-	FpS operator - (FpS r) const {
+	constexpr FpS operator - (FpS r) const {
 		FpS x = *this;
 		x -= r;
 		return x;
@@ -217,7 +217,7 @@ class FpS {
 	
 	/// \brief		Overload for '*' operator.
 	/// \details	Uses '*=' operator.
-	FpS operator * (FpS r) const {
+	constexpr FpS operator * (FpS r) const {
 		FpS x = *this;
 		x *= r;
 		return x;
@@ -225,7 +225,7 @@ class FpS {
 	
 	/// \brief		Overload for '/' operator.
 	/// \details	Uses '/=' operator.
-	FpS operator / (FpS r) const {
+	constexpr FpS operator / (FpS r) const {
 		FpS x = *this;
 		x /= r;
 		return x;
@@ -233,7 +233,7 @@ class FpS {
 	
 	/// \brief		Overload for '%' operator.
 	/// \details	Uses '%=' operator.
-	FpS operator % (FpS r) const {
+	constexpr FpS operator % (FpS r) const {
 		FpS x = *this;
 		x %= r;
 		return x;
@@ -244,7 +244,7 @@ class FpS {
 	//===============================================================================================//
 	
 	/// \brief		Overload for the '==' operator.
-	bool operator == (FpS r) const {
+	constexpr bool operator == (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -260,7 +260,7 @@ class FpS {
 	}
 	
 	/// \brief		Overload for the '!=' operator.
-	bool operator != (FpS r) const {
+	constexpr bool operator != (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -276,7 +276,7 @@ class FpS {
 	}
 	
 	/// \brief		Overload for the '<' operator.
-	bool operator < (FpS r) const {
+	constexpr bool operator < (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -292,7 +292,7 @@ class FpS {
 	}
 
 	/// \brief		Overload for the '>' operator.
-	bool operator > (FpS r) const {
+	constexpr bool operator > (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -308,7 +308,7 @@ class FpS {
 	}
 	
 	/// \brief		Overload for the '<=' operator.
-	bool operator <= (FpS r) const {
+	constexpr bool operator <= (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -324,7 +324,7 @@ class FpS {
 	}
 	
 	/// \brief		Overload for the '>=' operator.
-	bool operator >= (FpS r) const {
+	constexpr bool operator >= (FpS r) const {
 		// Optimised for when numFracBits_ is the same for both
 		// operators (first if statement).
 		if(numFracBits_ == r.numFracBits_) {
@@ -347,43 +347,43 @@ class FpS {
 	/// \details	Always rounds to negative infinity (66.3 becomes 66, -66.3 becomes -67).
 	/// \tparam		IntType		The return integer type.
 	template <class IntType>
-	IntType ToInt() const {
+	constexpr IntType ToInt() const {
 		// Right-shift to get rid of all the decimal bits
 		// This rounds towards negative infinity
 		return (IntType)(rawVal_ >> numFracBits_);
 	}
 
 	/// \brief		Converts the fixed-point number to a float.
-	float ToFloat() const {
+	constexpr float ToFloat() const {
 		return (float)rawVal_ / (float)((BaseType)1 << numFracBits_);
 	}
 
 	/// \brief		Converts the fixed-point number to a double.
-	double ToDouble() const {
+	constexpr double ToDouble() const {
 		return (double)rawVal_ / (double)((BaseType)1 << numFracBits_);
 	}
 
 	// Explicit Conversion Operator Overloads (casts)
 	
 	/// \brief		Conversion operator from fixed-point to int32_t.
-	operator int32_t() const {
+	constexpr operator int32_t() const {
 		return ToInt<int32_t>();
 	}
 	
 	/// \brief		Conversion operator from fixed-point to int64_t.
-	operator int64_t() const {		
+	constexpr operator int64_t() const {		
 		return ToInt<int64_t>();
 	}
 	
 	/// \brief		Conversion operator from fixed-point to float.
 	/// \note		Similar to double conversion.
-	operator float() const { 
+	constexpr operator float() const { 
 		return ToFloat();
 	}
 	
 	/// \brief		Conversion operator from fixed-point to double.
 	/// \note		Similar to float conversion.
-	operator double() const { 
+	constexpr operator double() const { 
 		return ToDouble();
 	}
 
